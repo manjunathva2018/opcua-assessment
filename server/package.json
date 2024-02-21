@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "OPC UA",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Manjunath V A",
+  "license": "ISC",
+  "dependencies": {
+    "node-opcua": "^2.120.0",
+    "number-convert": "^1.0.0"
+  },
+  "devDependencies": {
+    "node-opcua-types": "^2.120.0"
+  }
+}
