@@ -40,29 +40,34 @@ setInterval(() => {
 
 
     const variable1 = namespace.addVariable({
-        nodeId: "ns=1;s=O5D100",
-        browseName: "O5D100",
-        dataType: "String",
-        minimumSamplingInterval: 500,
-        value: {
-          get: function () {
-            return new opcua.Variant({ dataType: opcua.DataType.String, value: O5D100_value });
-          },
+      nodeId: "ns=1;s=O5D100",
+      browseName: "O5D100",
+      dataType: "String",
+      minimumSamplingInterval: 500,
+      value: {
+        get: function () {
+          return new opcua.Variant({
+            dataType: opcua.DataType.String,
+            value: O5D100_value,
+          });
         },
-      });
-      
-    
-      const variable2 = namespace.addVariable({
-        nodeId: "ns=1;s=VVB001",
-        browseName: "VVB001",
-        dataType: "String",
-        minimumSamplingInterval: 500,
-        value: {
-          get: function () {
-            return new opcua.Variant({ dataType: opcua.DataType.String, value: VVB001_value });
-          },
+      },
+    });
+
+    const variable2 = namespace.addVariable({
+      nodeId: "ns=1;s=VVB001",
+      browseName: "VVB001",
+      dataType: "String",
+      minimumSamplingInterval: 500,
+      value: {
+        get: function () {
+          return new opcua.Variant({
+            dataType: opcua.DataType.String,
+            value: VVB001_value,
+          });
         },
-      });
+      },
+    });
 }
 
 server.initialize(
