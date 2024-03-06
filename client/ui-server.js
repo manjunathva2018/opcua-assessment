@@ -9,7 +9,7 @@ const io = socketIo(server);
 const cors=require("cors");
 const { OPCUAClient } = require("node-opcua");
 
-app.use(express.static("./frontend/dist"));
+app.use(express.static("./front-end/dist"));
 app.use(cors());
 
 const client = OPCUAClient.create({ endpointMustExist: false });

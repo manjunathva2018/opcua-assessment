@@ -1,0 +1,65 @@
+
+@import "./../colors.scss";
+
+.header{
+    background-color: $warning;
+}
+
+.connection{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: #ffff;
+    border-right: 2px solid $warning;
+    padding:25px;
+}
+
+.logs{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: #ffff;
+    border-top: 2px solid $warning;
+    padding:15px;
+}
+
+.widget-creation{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: #ffff;
+    border-top: 2px solid $warning;
+    padding:15px;
+}
+
+.widget-display{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: #ffff;
+    border-top: 2px solid $warning;
+    padding:15px;
+}
+
+.logs-section{
+    max-height: 150px;
+    overflow-y: scroll;
+    .lin{
+        border-bottom: 1px solid #533a7129;
+    }
+}
+
+.widget{
+    border: 1px solid #533a7129;
+  
+    .toolbar{
+        background-color: $secondary;
+        color: $light;
+        padding: 10px;
+    }
+
+    .graph{
+        padding: 5px;
+    }
+}
+
+.mar{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}

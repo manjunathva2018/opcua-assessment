@@ -1,0 +1,138 @@
+
+<header>
+  <nav class="navbar navbar-light header shadow-sm">
+    <a class="navbar-brand font-weight-bold">
+     OPC UA Client
+    </a>
+  </nav>
+</header>
+
+<section class="container-fluid">
+<div class="row">
+<div class="col-md-3">
+<div class="connection shadow-sm">
+  <h6 >Establish a Connection to the OPC UA server.</h6>
+  <ng-container *ngIf="!hideConn">
+    <form [formGroup]="connectForm" (ngSubmit)="connectToOpcua()">
+      <div class="form-group">
+        <label for="endpoint" class="text-dark">Enter the Endpoint :</label>
+        <input type="text" class="form-control" formControlName="connectionStr" id="endpoint" aria-describedby="emailHelp">
+        <small id="emailHelp" class="form-text text-muted text-wrap">opc.tcp://&lt;host&gt;:&lt;port&gt;/Simulation</small>
+      </div>
+      <button type="submit" class="btn btn-primary">Connect <i class="fa fa-handshake-o" aria-hidden="true"></i></button><br/>
+      <span class="badge badge-pill badge-info" *ngIf="isConnect"><i class="fa fa-cog fa-spin" aria-hidden="true"></i> Connecting ...</span>
+      <span class="badge badge-pill badge-danger text-wrap" *ngIf="retryConnect">Failed to Connect, retrying the connection...</span>
+    </form></ng-container>
+ 
+  <ng-container *ngIf="hideConn">
+    <div class="form-group">
+      <label class="text-dark">Endpoint : {{serverUrl}}</label><br/>
+      <span class="badge badge-pill badge-success">Connected <i class="fa fa-check" aria-hidden="true"></i> </span>
+    </div>
+   
+    <button type="button" class="btn btn-primary" (click)="disconnectFromOpcua()">Disconnect <i class="fa fa-times" aria-hidden="true"></i></button>
+  </ng-container>
+
+</div>
+<div class="connection shadow-sm">
+  <h6>Read data from a Node :</h6>
+  <ng-container *ngIf="!hideNode">
+    <form [formGroup]="readFromNodeForm" (ngSubmit)="readDataFromNode()">
+      <div class="form-group">
+        <label for="endpoint" class="text-dark">Enter the Node ID :</label>
+        <input type="text" formControlName="nodeId" class="form-control" id="endpoint" aria-describedby="emailHelp">
+        <small id="emailHelp" class="form-text text-muted">ns=1;s=O5D100 / ns=1;s=VVB001  </small>
+      </div>
+      <button type="submit" class="btn btn-primary">Read </button>
+    </form></ng-container>
+  <ng-container *ngIf="hideNode">
+    <div class="form-group">
+      <label class="text-dark">Node Id : {{nodeId}}</label><br/>
+     <h6><span class="badge badge-pill badge-success">Reading the values. <i class="fa fa-spinner fa-spin" aria-hidden="true"></i> </span></h6> <br/>
+     <label class="text-dark">Display : {{lastValues}} values</label>
+     <select class="form-control" id="widgetType" [(ngModel)]="lastValues">
+      <option value="-1">Latest</option>
+      <option value="-5">Last 5 values</option>
+      <option value="-10">Last 10 Values</option>
+      <option value="-15">Last 15 Values</option>
+      <option value="-25">Last 25</option>
+      <option value="-45">Last 35</option>
+      <option value="-50">Last 50</option>
+    </select>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="disconnectTheSession()">Stop <i class="fa fa-times" aria-hidden="true"></i></button>
+  </ng-container>
+
+
+</div>
+</div>
+<div class="col-md-9">
+
+  <section class="logs shadow-sm">
+    <accordion [isAnimated]="true">
+      <accordion-group >
+        <button
+        class="btn btn-link btn-block justify-content-between d-flex w-100  shadow-none"
+        accordion-heading type="button">
+        <div class="pull-left float-left">Connection Logs</div>
+        <span class="float-right pull-right"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+      </button>
+      <div class="logs-section">
+        <p class="lin" *ngFor="let log of connectionLogs">{{log.time|date:'dd/MM/yyyy hh:mm:ss a'}} {{log.msg}}</p>
+      </div>
+      
+      </accordion-group>
+      <accordion-group >
+        <button
+        class="btn btn-link btn-block justify-content-between d-flex w-100  shadow-none"
+        accordion-heading type="button">
+        <div class="pull-left float-left">Data Logs</div>
+        <span class="float-right pull-right"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+      </button>
+      <div class="logs-section">
+        <p class="lin" *ngFor="let log of dataLogs">{{log.time|date:'dd/MM/yyyy hh:mm:ss a'}} {{log.msg}}</p>
+      </div>
+      </accordion-group>
+     
+    </accordion>
+  </section>
+
+  <section class="widget-creation shadow-sm">
+    <div class="row">
+      <div class="col-md-6">
+        <h6>Widget Creation</h6><br/>
+       <app-create-widget [nodeId]="nodeId" (createWidget)="addWidget($event)" [hideNode]="hideNode"></app-create-widget>
+      </div>
+      <!-- <div class="col-md-6"><h6>Preview</h6></div> -->
+    </div>
+  </section>
+  <section class="widget-display shadow-sm">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 mar" *ngFor="let widget of widgets;let i=index">
+          <div class="widget">
+            <div class="toolbar">
+              <div class="row justify-content-between">
+                <div class="col-auto mr-auto"><h6>{{widget.widgetName}}</h6></div>
+                <!-- <div class="col-auto mr-auto"><h6>Select</h6></div> -->
+                <div class="col-auto"> <i class="fa fa-close" (click)="deleteWidget(i)" style="cursor: pointer;"></i></div>
+              </div>
+            </div>
+            <div class="graph">
+               <app-line *ngIf="widget.widgetType=='LINE'" [widgetData]="widget" [values]="values"></app-line>
+              <app-bar *ngIf="widget.widgetType=='BAR'" [widgetData]="widget" [values]="values"></app-bar>
+              <app-pie *ngIf="widget.widgetType=='PIE'" [widgetData]="widget" [values]="values"></app-pie>
+              <app-table *ngIf="widget.widgetType=='TABLE'" [widgetData]="widget" [values]="values"></app-table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+  </section>
+ 
+</div>
+</div>
+
+</section>

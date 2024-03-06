@@ -1,0 +1,94 @@
+<div class="add-widget-box">
+
+    <form [formGroup]="widgetForm" (ngSubmit)="create()">
+ 
+      <div class="form-group">
+        <label for="widgetName" class="text-dark">Enter Widget Name :</label>
+        <input type="text" formControlName="widgetName" class="form-control form-control-sm" id="widgetName" aria-describedby="emailHelp">
+        <small id="emailHelp" class="form-text text-muted"> </small>
+      </div>
+      <div class="form-group">
+        <label for="widgetType" class="text-dark">Select Widget Type :</label>
+        <select class="form-control form-control-sm" id="widgetType" formControlName="widgetType" (change)="chartTypeChange()">
+          <option value="BAR">Bar</option>
+          <option value="LINE">Line</option>
+          <option value="PIE">Pie</option>
+          <option value="TABLE">Table</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="chartTitle" class="text-dark">Enter Chart Title :</label>
+        <input type="text" class="form-control form-control-sm" id="chartTitle" formControlName="chartTitle" aria-describedby="emailHelp">
+        <small id="emailHelp" class="form-text text-muted"> </small>
+      </div>
+      <div *ngIf="widgetForm.get('widgetType').value=='BAR' || widgetForm.get('widgetType').value=='LINE'">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="xAxisKey" class="text-dark">Select X-Axis Key</label>
+            <select class="form-control form-control-sm" id="xAxisKey" formControlName="xAxisKey" (change)="changeXAxisKey($event)">
+              <option *ngFor="let option of xAxisOption" [value]="option.label">{{option.label}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="xAxisLabel" class="text-dark">X-Axis Label</label>
+            <input type="text" class="form-control form-control-sm" id="xAxisLabel" formControlName="xAxisLabel">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="xAxisUnit" class="text-dark">Unit</label>
+            <input type="text" class="form-control form-control-sm" id="xAxisUnit" formControlName="xAxisUnit">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="yAxisKey" class="text-dark">Select Y-Axis Key</label>
+            <select class="form-control form-control-sm" id="yAxisKey" formControlName="yAxisKey" (change)="changeYAxisKey($event)">
+              <option *ngFor="let option of yAxisOption" [value]="option.label">{{option.label}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="yAxisLabel" class="text-dark">Y-Axis Label</label>
+            <input type="text" class="form-control form-control-sm" id="yAxisLabel" formControlName="yAxisLabel">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="yAxisUnit" class="text-dark">Unit</label>
+            <input type="email" class="form-control form-control-sm" id="yAxisUnit" formControlName="yAxisUnit">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="seriesName" class="text-dark">Enter Series Name :</label>
+          <input type="text" class="form-control form-control-sm" id="seriesName" aria-describedby="emailHelp" formControlName="seriesName">
+          <small id="emailHelp" class="form-text text-muted"> </small>
+        </div>
+      </div>
+    <ng-container *ngIf="widgetForm.get('widgetType').value=='PIE' || widgetForm.get('widgetType').value=='TABLE'">
+   
+        <div formArrayName="seriesChart">
+          <ng-container  *ngFor="let seriesControl of seriesArray.controls; let i = index">
+            <form class="row" [formGroup]="seriesControl">
+              <div class="form-group col-md-6">
+                <label for="seriesKey" class="text-dark">Select {{(widgetForm.get('widgetType').value=='TABLE')?'Data Key':'Series Key'}} </label>
+                <select class="form-control form-control-sm" id="seriesKey" formControlName="seriesKey">
+                  <option *ngFor="let option of seriesKeyOption" [value]="option.label">{{option.label}}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="seriesLabel" class="text-dark">{{(widgetForm.get('widgetType').value=='TABLE')?'Column Label':'Series Label'}}</label>
+                <input type="text" class="form-control form-control-sm" id="seriesLabel" formControlName="seriesLabel">
+              </div>
+          <div class="form-group col-md-2">
+            <label for="seriesLabel" class="text-dark">Action</label>
+            <button type="button" class="btn btn-sm btn-danger" (click)="removeRow(i)"><i class="fa fa-trash"></i></button>
+          </div></form>
+            
+   
+          </ng-container>
+        </div>
+        <button type="button" class="btn btn-sm btn-secondary float-right" (click)="addRow()"><i class="fa fa-plus"></i> Add a Row</button>
+        <br/>
+ 
+    </ng-container>
+    <br/>
+      <button type="submit" class="btn btn-primary" [disabled]="!hideNode">Create </button>
+    </form>
+
+  </div>
